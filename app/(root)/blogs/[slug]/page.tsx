@@ -1,46 +1,61 @@
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, CalendarDays, Clock, Facebook, Link2, Linkedin, Minus, Send, Twitter } from 'lucide-react'
-import Image from 'next/image'
+import { getReadingTime } from '@/lib/utils'
+import { getDetailedBlog } from '@/service'
+import { format } from 'date-fns'
 import parse from 'html-react-parser'
-import { content } from '@/constants'
+import {
+	ArrowUpRight,
+	CalendarDays,
+	Clock,
+	Facebook,
+	Link2,
+	Linkedin,
+	Minus,
+	Send,
+	Twitter,
+} from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
-function SlugPage({ params }: { params: { slug: string } }) {
+// eslint-disable-next-line @next/next/no-async-client-component
+async function SlugPage({ params }: { params: { slug: string } }) {
+	const blog = await getDetailedBlog(params.slug)
+
 	return (
 		<div className='pt-[15vh] max-w-5xl mx-auto'>
 			<h1 className='lg:text-6xl md:text-5xl text-4xl font-creteRound'>
-				The AGI hype train is running out of steam
+				{blog.title}
 			</h1>
 
 			<div className='flex items-center flex-wrap max-md:justify-center gap-4 mt-4'>
 				<div className='flex items-center gap-2'>
 					<Image
-						src={'/author/thomas-macaulay.jpg'}
+						src={blog.author.image.url}
 						alt='author'
 						width={30}
 						height={30}
 						className='rounded-sm object-cover'
 					/>
-					<p>by Thomas</p>
+					<p>by {blog.author.name}</p>
 				</div>
 				<Minus />
 				<div className='flex items-center gap-2'>
 					<Clock className='w-5 h-5' />
-					<p>01 min read</p>
+					<p>{getReadingTime(blog.content.html)} min read</p>
 				</div>
 				<Minus />
 				<div className='flex items-center gap-2'>
 					<CalendarDays className='w-5 h-5' />
-					<p>Dec 5, 2021</p>
+					<p>{format(new Date(blog.createdAt), 'MMM dd,yyyy')}</p>
 				</div>
 			</div>
 
 			<Image
-				src={'/blogs/02.jpg'}
+				src={blog.image.url}
 				alt='Blog image'
 				width={1120}
 				height={595}
-				className='mt-4 rounded-md'
+				className='mt-4 rounded-md object-cover'
 			/>
 
 			<div className='flex md:gap-12 max-md:flex-col-reverse mt-12 relative'>
@@ -67,24 +82,31 @@ function SlugPage({ params }: { params: { slug: string } }) {
 						</div>
 					</div>
 				</div>
-				<div className='flex-1 prose dark:prose-invert'>{parse(content)}</div>
+				<div className='flex-1 prose dark:prose-invert'>
+					{parse(blog.content.html)}
+				</div>
 			</div>
 
 			<div className='flex mt-6 gap-6 items-center max-md:flex-col'>
 				<Image
-					src={'/author/chris-impey.jpg'}
+					src={blog.author.image.url}
 					alt='author'
 					width={155}
 					height={155}
 					className='rounded-md max-md:self-start'
 				/>
 
-				<div className="flex-1 flex flex-col space-y-4">
-					<h2 className='text-3xl font-creteRound'>Thomas Macaulay</h2>
-					<p className="line-clamp-2 text-muted-foreground">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis suscipit neque saepe impedit repellendus minus nihil a labore velit iusto.</p>
-					<Link href={"/"} className='flex items-center gap-2 hover:text-blue-500 underline transition-colors'>
+				<div className='flex-1 flex flex-col space-y-4'>
+					<h2 className='text-3xl font-creteRound'>{blog.author.name}</h2>
+					<p className='line-clamp-2 text-muted-foreground'>
+						{blog.author.bio}
+					</p>
+					<Link
+						href={`/authors/${blog.author.slug}`}
+						className='flex items-center gap-2 hover:text-blue-500 underline transition-colors'
+					>
 						<span>See all posts by this author</span>
-						<ArrowUpRight/> 
+						<ArrowUpRight />
 					</Link>
 				</div>
 			</div>

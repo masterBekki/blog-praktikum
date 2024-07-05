@@ -7,7 +7,7 @@ import Link from 'next/link'
 function AboutPage() {
 	return (
 		<div className='max-w-6xl mx-auto'>
-			<div className='relative min-h-[40vh] flex items-center flex-col justify-center'>
+			<div className='relative min-h-[30vh] flex items-center flex-col justify-center'>
 				<h2 className='text-center text-4xl section-title font-creteRound'>
 					<span>About</span>
 				</h2>

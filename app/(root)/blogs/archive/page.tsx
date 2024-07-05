@@ -4,7 +4,7 @@ import Link from 'next/link'
 function Archive() {
 	return (
 		<div className='max-w-6xl mx-auto'>
-			<div className='relative min-h-[40vh] flex items-center flex-col justify-end'>
+			<div className='relative min-h-[30vh] flex items-center flex-col justify-end'>
 				<p className='text-muted-foreground text-lg'>Showing posts from</p>
 
 				<h2 className='text-center text-4xl section-title font-creteRound'>
